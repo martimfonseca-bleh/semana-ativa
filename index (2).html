@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Semana Ativa – desafios semanais de atividade física</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EAF2F4;--card:#fff;--ink:#0F2733;--mute:#46606B;--line:#C9DADF;--sea:#0B6E75;--sea-ink:#fff;--sun:#F5B700;--sun-ink:#2A1F00;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1A22;--card:#12303D;--ink:#E8F2F5;--mute:#9DB8C2;--line:#24485A;--sea:#3FB8C0;--sea-ink:#04222A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1A22;--card:#12303D;--ink:#E8F2F5;--mute:#9DB8C2;--line:#24485A;--sea:#3FB8C0;--sea-ink:#04222A;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:clamp(2rem,8vw,3rem);line-height:1;margin:0 0 4px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.25rem;margin:32px 0 12px;font-weight:700}
+.sub{color:var(--mute);margin:0 0 20px}
+.hero{display:flex;gap:20px;align-items:center;background:var(--sea);color:var(--sea-ink);border-radius:24px;padding:20px}
+.ring{position:relative;flex:none;width:132px;height:132px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+.ring b{font-size:2.2rem;font-weight:800}
+.ring small{display:block;font-size:.8rem;opacity:.85}
+.hero h3{margin:0;font-size:1.4rem}
+.hero p{margin:4px 0 0}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.3);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sun);border-radius:4px;transition:width .4s}
+#msg{min-height:1.5em;margin:10px 2px 0;font-weight:700}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ch{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.ch.done{border-color:var(--sea)}
+.ch .t{flex:1;min-width:0}
+.ch strong{display:block}
+.ch span{color:var(--mute);font-size:.9rem}
+.pts{font-weight:800;color:var(--sea);white-space:nowrap}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;min-height:44px;padding:0 16px;cursor:pointer;background:var(--sea);color:var(--sea-ink)}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.ok{background:var(--sun);color:var(--sun-ink)}
+button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.rank{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 14px;margin:0;list-style:none}
+.rank li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.rank li:last-child{border:0}
+.rank .me{font-weight:800;color:var(--sea)}
+.badges{display:flex;flex-wrap:wrap;gap:8px}
+.badge{padding:8px 14px;border-radius:999px;border:1px dashed var(--line);color:var(--mute);font-size:.9rem}
+.badge.on{background:var(--sun);color:var(--sun-ink);border:1px solid var(--sun);font-weight:700}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.note{color:var(--mute);font-size:.85rem;margin-top:20px}
+@media (max-width:480px){.hero{flex-direction:column;text-align:center}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Semana Ativa</h1>
+<p class="sub">Completa os desafios da semana, ganha pontos e sobe de nível.</p>
+
+<section class="hero" aria-label="O teu progresso">
+  <div class="ring">
+    <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="12"/><circle id="arc" cx="60" cy="60" r="52" fill="none" stroke="var(--sun)" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+    <div class="num"><div><b id="wk">0</b><small>de 100 pts</small></div></div>
+  </div>
+  <div style="flex:1;min-width:0">
+    <h3 id="lvl">Nível: Iniciante</h3>
+    <p id="lvlsub"></p>
+    <div class="bar"><i id="lvlbar" style="width:0"></i></div>
+  </div>
+</section>
+<p id="msg" aria-live="polite"></p>
+
+<h2>Desafios da semana</h2>
+<ul class="list" id="chs"></ul>
+
+<h2>Ranking da turma</h2>
+<ol class="rank" id="rank"></ol>
+
+<h2>Medalhas</h2>
+<div class="badges" id="badges"></div>
+
+<div class="row">
+  <button id="next">Começar nova semana</button>
+  <button class="ghost" id="reset">Apagar todos os dados</button>
+</div>
+<p class="note">Referência: a Organização Mundial da Saúde recomenda, em média, 60 minutos por dia de atividade física moderada a vigorosa para crianças e adolescentes. Os colegas do ranking são fictícios e servem de exemplo. Protótipo escolar; os dados ficam apenas neste dispositivo.</p>
+</main>
+
+<script>
+const CH=[
+ {id:1,t:"Caminhada rápida de 30 minutos",d:"Um ritmo em que consegues falar, mas não cantar.",p:20},
+ {id:2,t:"10 000 passos num dia",d:"Conta os passos com o telemóvel ou a pulseira.",p:30},
+ {id:3,t:"Pausa ativa de 5 minutos",d:"Levanta-te e mexe-te depois de uma hora de estudo.",p:10},
+ {id:4,t:"Escadas em vez de elevador",d:"Durante um dia inteiro de aulas.",p:10},
+ {id:5,t:"Treino em dupla",d:"20 minutos de exercício com um colega.",p:25,soc:1},
+ {id:6,t:"15 minutos de alongamentos",d:"Costas, pernas e ombros.",p:15}
+];
+const LV=[[0,"Iniciante"],[100,"Ativo"],[250,"Dinâmico"],[500,"Atleta"]];
+const BG=[
+ ["Primeiro passo",s=>s.done.length>=1],
+ ["Em ritmo",s=>s.wk>=50],
+ ["Meta semanal",s=>s.wk>=100],
+ ["Espírito de equipa",s=>s.done.includes(5)],
+ ["Veterano",s=>s.all>=250]
+];
+const FAKE=[["Marta",70],["Rui",55],["Inês",40],["Tiago",25]];
+const KEY="semana-ativa-v1";
+let S={done:[],bank:0},armed=false;
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function calc(){const wk=CH.filter(c=>S.done.includes(c.id)).reduce((a,c)=>a+c.p,0);return{done:S.done,wk,all:S.bank+wk}}
+function render(msg){
+ const s=calc();
+ $("wk").textContent=s.wk;
+ $("arc").style.strokeDashoffset=326.7*(1-Math.min(1,s.wk/100));
+ let i=0;LV.forEach((l,k)=>{if(s.all>=l[0])i=k});
+ const nx=LV[i+1];
+ $("lvl").textContent="Nível: "+LV[i][1];
+ $("lvlsub").textContent=nx?"Faltam "+(nx[0]-s.all)+" pontos para "+nx[1]+".":"Nível máximo atingido.";
+ $("lvlbar").style.width=(nx?(s.all-LV[i][0])/(nx[0]-LV[i][0])*100:100)+"%";
+ $("chs").innerHTML=CH.map(c=>{const d=S.done.includes(c.id);
+  return `<li class="ch${d?" done":""}"><div class="t"><strong>${c.t}</strong><span>${c.d}</span></div><span class="pts">+${c.p}</span><button data-id="${c.id}" class="${d?"ghost":"ok"}" aria-pressed="${d}">${d?"Desfazer":"Concluir"}</button></li>`}).join("");
+ const rows=FAKE.concat([["Tu",s.wk]]).sort((a,b)=>b[1]-a[1]);
+ $("rank").innerHTML=rows.map((r,k)=>`<li class="${r[0]==="Tu"?"me":""}"><span>${k+1}. ${r[0]}</span><span>${r[1]} pts</span></li>`).join("");
+ $("badges").innerHTML=BG.map(b=>`<span class="badge${b[1](s)?" on":""}">${b[0]}</span>`).join("");
+ $("msg").textContent=msg||"";
+ $("reset").textContent=armed?"Confirmar: apagar tudo":"Apagar todos os dados";
+}
+$("chs").addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b)return;
+ const id=+b.dataset.id,c=CH.find(x=>x.id===id),had=S.done.includes(id),before=calc().wk;
+ S.done=had?S.done.filter(x=>x!==id):S.done.concat(id);
+ save();
+ const now=calc().wk;
+ render(had?"Desafio desfeito.":now>=100&&before<100?"Meta semanal atingida. Parabéns!":"+"+c.p+" pontos. Bom trabalho!");
+});
+$("next").onclick=()=>{S.bank+=calc().wk;S.done=[];armed=false;save();render("Nova semana iniciada. Os teus pontos foram guardados.")};
+$("reset").onclick=()=>{if(!armed){armed=true;render("Carrega outra vez para confirmar.");return}
+ S={done:[],bank:0};armed=false;save();render("Dados apagados.")};
+render();
+</script>
+</body>
+</html>
